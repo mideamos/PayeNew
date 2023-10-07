@@ -35,6 +35,7 @@ public partial class Profiles : System.Web.UI.Page
     SqlConnection con = new SqlConnection(PAYEClass.connection);
     protected void Page_Load(object sender, EventArgs e)
     {
+
         if (!IsPostBack)
         {
             /***************************************************************/

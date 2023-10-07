@@ -113,6 +113,34 @@ public partial class IndividualList : System.Web.UI.Page
             else
                 div_paging.Style.Add("margin-top", "-60px");
         }
+
+        if (Session["roleId"] != null)
+        {
+            string roleId = Session["roleId"].ToString();
+
+            if (roleId == "1")
+            {
+                //txt_name.Enabled = false;
+                //txt_mobile.Enabled = false;
+                //txt_RIN.Enabled = false;
+                addIndId.Visible = false;
+                addCorpId.Visible = false;
+                addGovId.Visible = false;
+                addSpeId.Visible = false;
+
+            }
+            else if (roleId == "2" || roleId == "3")
+            {
+                //txt_name.Enabled = true;
+                //txt_mobile.Enabled = true;
+                //txt_RIN.Enabled = true;
+                addIndId.Visible = true;
+                addCorpId.Visible = true;
+                addGovId.Visible = true;
+                addSpeId.Visible = true;
+
+            }
+        }
     }
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {

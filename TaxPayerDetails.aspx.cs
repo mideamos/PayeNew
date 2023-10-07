@@ -18,6 +18,7 @@ public partial class TaxPayerDetails : System.Web.UI.Page
     
     protected void Page_Load(object sender, EventArgs e)
     {
+
         if (!IsPostBack)
         {
             string val = "";
@@ -340,6 +341,18 @@ public partial class TaxPayerDetails : System.Web.UI.Page
                 lblpageto3.Text = "0";
                 lblpageTotal3.Text = "0";
 
+            }
+        }
+        if (Session["roleId"] != null)
+        {
+            string roleId = Session["roleId"].ToString();
+            if (roleId == "1")
+            {
+                AddAssId.Visible = false;
+            }
+            else if (roleId == "2" || roleId == "3")
+            {
+                AddAssId.Visible = true;
             }
         }
 

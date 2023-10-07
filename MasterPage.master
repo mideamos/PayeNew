@@ -30,7 +30,7 @@
     <h4>We are processing your request. Please be patient.</h4>
 </div>--%>
 
-  <%--      <div class="loader" id="loader" runat="server">
+        <%--      <div class="loader" id="loader" runat="server">
             <div class="loader-inner">
                 <div class="loader-line-wrap">
                     <div class="loader-line"></div>
@@ -218,7 +218,7 @@
                             <li><a href="#">Scratch Card Management</a></li>
                             <li><a href="#">Managed File Transfers</a></li>
                             <li><a href="#">API Management</a></li>--%>
-                                    <li><a href="PullData_N.aspx">Systems Settings</a></li>
+                                    <li id="SysSetId" runat="server"><a href="PullData_N.aspx" id="SysSetLink">Systems Settings</a></li>
                                     <li>
                                         <asp:LinkButton runat="server" ID="onLastRecord_id" Text="Populate Input File with Last Year’s record" OnClick="onLastRecord" /></li>
                                 </ul>
@@ -230,12 +230,15 @@
                                 <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="MyProfile.aspx">My Profile</a></li>
-                                    <li><a href="UserManagement.aspx">User Management</a></li>
+                                    <li id="UserMgtId" runat="server">
+                                        <a href="UserManagement.aspx" id="UserMgtLink">User Management</a>
+                                    </li>
                                     <li><a href="#">My Modules</a></li>
                                     <li><a href="#">Sign Out</a></li>
                                 </ul>
                             </li>
                         </ul>
+
                     </div>
                 </div>
             </div>
@@ -306,11 +309,11 @@
                                     <li>
                                         <a href="BusinessLists.aspx"><i class="fa fa-angle-right"></i>Businesses</a>
                                     </li>
-                                    
+
                                     <li class='<%= Session["roleId"].ToString() == "4" ? "show" : "hide" %>'>
                                         <a href="error.html"><i class="fa fa-angle-right"></i>Vehicles</a>
                                     </li>
-                                    
+
                                     <li class='<%= Session["roleId"].ToString() == "4" ? "show" : "hide" %>'>
                                         <a href="error.html"><i class="fa fa-angle-right"></i>Lands</a>
                                     </li>
@@ -350,7 +353,7 @@
                             </div>
                             <div class="portlet-body">
                                 <ul class="nav">
-                                    
+
                                     <li class='<%= Session["roleId"].ToString() != "3" ? "show" : "hide" %>'>
                                         <a href="RulesCheck.aspx"><i class="fa fa-angle-right"></i>Rules Check</a>
                                     </li>
@@ -373,12 +376,12 @@
                                     <li><a href="PayeOutputFile_N.aspx" style="color: black;"><i class="fa fa-angle-right"></i>Paye Output File</a></li>
                                     <li><a href="EmployeeContributionOutput.aspx" style="color: black;"><i class="fa fa-angle-right"></i>Employee Contribution</a></li>
                                     <li><a href="EmployerContributionOutput.aspx" style="color: black;"><i class="fa fa-angle-right"></i>Employer Collection</a></li>
-                                    
+
                                     <li class='<%= Session["roleId"].ToString() == "3" ? "show" : "hide" %>'>
                                         <a href="Submission_N.aspx"><i class="fa fa-angle-right"></i>Submissions</a>
                                     </li>
 
-                                    
+
                                     <li class='<%= Session["roleId"].ToString() == "3" ? "show" : "hide" %>'>
                                         <a href="TaxBaseComputation_N.aspx"><i class="fa fa-angle-right"></i>Tax Base Amount</a>
                                     </li>
@@ -460,7 +463,31 @@
         <script type="text/javascript" src="js/bootstrap-select.min.js"></script>
         <script type="text/javascript" src="js/jsCommon.js"></script>
         <script src="js/jquery/1.8/jquery-ui.min.js"></script>
-    <%--    <style>
+        <script>
+            // script.js
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var userMgtLink = document.getElementById('UserMgtLink');
+                var userMgtId = document.getElementById('UserMgtId');
+                var SysSetLink = document.getElementById('SysSetLink');
+                var SysSetId = document.getElementById('SysSetId');
+
+                userMgtLink.addEventListener('click', function (e) {
+                    if (!userMgtId.style.display || userMgtId.style.display === 'block') {
+                        e.preventDefault(); // Prevent navigation if visibility is not set to 'none'
+                    }
+                });
+
+
+                SysSetLink.addEventListener('click', function (e) {
+                    if (!SysSetId.style.display || SysSetId.style.display === 'block') {
+                        e.preventDefault(); // Prevent navigation if visibility is not set to 'none'
+                    }
+                });
+            });
+
+        </script>
+        <%--    <style>
             .nav-link2 {
                 display: flex;
                 align-items: center;
@@ -571,7 +598,7 @@
                 }
             }*/
         </style>--%>
- <%--       <script type="text/javascript">
+        <%--       <script type="text/javascript">
             $(window).bind('beforeunload', function () {
                 $(".loader").fadeIn("slow");
             });

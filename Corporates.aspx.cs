@@ -116,6 +116,7 @@ public partial class Corporates : System.Web.UI.Page
             else
                 div_paging.Style.Add("margin-top", "-60px");
         }
+
     }
 
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
