@@ -35,6 +35,22 @@ public partial class IndividualList : System.Web.UI.Page
     SqlConnection con = new SqlConnection(PAYEClass.connection);
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session["roleId"] != null)
+        {
+            string roleId = Session["roleId"].ToString();
+
+            if (roleId == "1" || roleId == "2")
+            {
+                txt_name.Enabled = true;
+                txt_mobile.Enabled = true;
+                txt_RIN.Enabled = true;
+                addIndId.Visible = true;
+                addCorpId.Visible = true;
+                addGovId.Visible = true;
+                addSpeId.Visible = true;
+
+            }
+        }
         if (!IsPostBack)
         {
             /***************************************************************/
@@ -93,8 +109,8 @@ public partial class IndividualList : System.Web.UI.Page
             // DataTable Dt_database = new DataTable();
             Adp.Fill(dt_list);
             //}
-           // DataTable final = new DataTable();
-           // final.ImportRow(dt_list.Rows[1]);
+            // DataTable final = new DataTable();
+            // final.ImportRow(dt_list.Rows[1]);
 
             Session["dt_l"] = dt_list;
             grd_ind.DataSource = dt_list;
@@ -113,41 +129,13 @@ public partial class IndividualList : System.Web.UI.Page
             else
                 div_paging.Style.Add("margin-top", "-60px");
         }
-
-        if (Session["roleId"] != null)
-        {
-            string roleId = Session["roleId"].ToString();
-
-            if (roleId == "1")
-            {
-                //txt_name.Enabled = false;
-                //txt_mobile.Enabled = false;
-                //txt_RIN.Enabled = false;
-                addIndId.Visible = false;
-                addCorpId.Visible = false;
-                addGovId.Visible = false;
-                addSpeId.Visible = false;
-
-            }
-            else if (roleId == "2" || roleId == "3")
-            {
-                //txt_name.Enabled = true;
-                //txt_mobile.Enabled = true;
-                //txt_RIN.Enabled = true;
-                addIndId.Visible = true;
-                addCorpId.Visible = true;
-                addGovId.Visible = true;
-                addSpeId.Visible = true;
-
-            }
-        }
     }
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-       
+
         grd_ind.PageIndex = e.NewPageIndex;
         grd_ind.DataSource = Session["dt_l"];
-      
+
         grd_ind.DataBind();
 
         if (e.NewPageIndex + 1 == 1)
@@ -160,7 +148,7 @@ public partial class IndividualList : System.Web.UI.Page
         }
 
         lblpageto.Text = ((e.NewPageIndex + 1) * grd_ind.Rows.Count).ToString();
-      
+
     }
     protected void btn_search_Click(object sender, EventArgs e)
     {
@@ -203,24 +191,24 @@ public partial class IndividualList : System.Web.UI.Page
         string version = "";
         string fileString = "";
         request.Credentials = new NetworkCredential(PAYEClass.ftpusername, PAYEClass.ftppassword);
-      
-        try
-        {      
-             FtpWebRequest reqFTP;
-             reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri(url));
-             reqFTP.UseBinary = true;
-             reqFTP.Credentials = new NetworkCredential(PAYEClass.ftpusername, PAYEClass.ftppassword);
-             reqFTP.Method = WebRequestMethods.Ftp.GetDateTimestamp;
-             FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
-             DateTime result = DateTime.MinValue;
-             result = response.LastModified;
-             if (result.Day > 10 || fileString == "")
-             {
-                 upload_json("");
-             }
 
-             byte[] newFileData = request.DownloadData(new Uri(url));
-             fileString = System.Text.Encoding.UTF8.GetString(newFileData);
+        try
+        {
+            FtpWebRequest reqFTP;
+            reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri(url));
+            reqFTP.UseBinary = true;
+            reqFTP.Credentials = new NetworkCredential(PAYEClass.ftpusername, PAYEClass.ftppassword);
+            reqFTP.Method = WebRequestMethods.Ftp.GetDateTimestamp;
+            FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
+            DateTime result = DateTime.MinValue;
+            result = response.LastModified;
+            if (result.Day > 10 || fileString == "")
+            {
+                upload_json("");
+            }
+
+            byte[] newFileData = request.DownloadData(new Uri(url));
+            fileString = System.Text.Encoding.UTF8.GetString(newFileData);
         }
         catch (WebException e)
         {
@@ -236,9 +224,9 @@ public partial class IndividualList : System.Web.UI.Page
         string token = PAYEClass.getToken();
         /**************************************************************/
         string URI1 = "https://stage-api.eirsautomation.xyz/SupplierData/PAYE_Contribution_Formal_Business_Employee_BS_A_F_TaxPayer";
-       
+
         string myParameters1 = "";
-       
+
         string InsCompRes = "";
         using (var wc = new WebClient())
         {
@@ -252,7 +240,7 @@ public partial class IndividualList : System.Web.UI.Page
 
         WebClient request = new WebClient();
 
-      
+
 
 
         string url = PAYEClass.uploadurltxtfile + "Individuals.txt";
@@ -262,10 +250,10 @@ public partial class IndividualList : System.Web.UI.Page
 
         try
         {
-          //  byte[] data = Encoding.ASCII.GetBytes(json);
-          //  request.UploadData(new Uri(url), data);
-          
-          
+            //  byte[] data = Encoding.ASCII.GetBytes(json);
+            //  request.UploadData(new Uri(url), data);
+
+
         }
 
         catch (WebException e)
@@ -282,9 +270,9 @@ public partial class IndividualList : System.Web.UI.Page
         {
             if (table.Rows.Count > 0)
             {
-               
+
                 SqlConnection con1 = new SqlConnection(PAYEClass.connection);
-                
+
                 SqlCommand truncate = new SqlCommand("TRUNCATE TABLE Individuals_API", con);
                 con.Open();
                 truncate.ExecuteNonQuery();

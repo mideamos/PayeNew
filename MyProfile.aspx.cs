@@ -3,6 +3,9 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Text;
 using System.Web.UI;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using System.Web.UI.HtmlControls;
+using AjaxControlToolkit.HTMLEditor.ToolbarButton;
 
 public partial class MyProfile : System.Web.UI.Page
 {
@@ -15,6 +18,7 @@ public partial class MyProfile : System.Web.UI.Page
             {
                 Response.Redirect("Login.aspx");
             }
+            //CheckUserRole();
             if (Request.QueryString["emailEMP"] != null)
             {
                 string email = Request.QueryString["emailEMP"].ToString();
@@ -23,6 +27,20 @@ public partial class MyProfile : System.Web.UI.Page
             else
                 drpusername_SelectedIndexChanged("");
         }
+
+    }
+    private void CheckUserRole()
+    {
+        string RoleId = Session["roleId"].ToString();
+
+        if (RoleId != "1")
+        {
+            lblMessage.Text = "You don't have access here.";
+            lblMessage.Visible = true;
+            ScriptManager.RegisterStartupScript(Page, this.GetType(), "AlertMessage", "<script language=\"javascript\"  type=\"text/javascript\">;alert('You don't have access here.');</script>", false);
+            Response.Redirect("dashboard.aspx");
+        }
+
     }
     protected void drpusername_SelectedIndexChanged(string em)
     {
@@ -34,7 +52,7 @@ public partial class MyProfile : System.Web.UI.Page
 
         SqlConnection con = new SqlConnection(PAYEClass.connection);
         SqlCommand cmd = new SqlCommand(loginqry, con);
-        DataTable dt = new DataTable();
+        System.Data.DataTable dt = new System.Data.DataTable();
         con.Open();
         SqlDataAdapter da = new SqlDataAdapter(cmd);
         da.SelectCommand.CommandTimeout = PAYEClass.defaultTimeout;
@@ -46,7 +64,9 @@ public partial class MyProfile : System.Web.UI.Page
             txt_lname.Text = dt.Rows[0]["LastName"].ToString();
             txt_phn.Text = dt.Rows[0]["Phone"].ToString();
             txt_email.Text = dt.Rows[0]["Email"].ToString();
-            txt_password.Text = dt.Rows[0]["Password"].ToString();
+            Session["email"] = txt_email.Text;
+            //txt_password.Text = dt.Rows[0]["Password"].ToString();
+            txt_password.Text = "******";
         }
         else
         {
@@ -56,6 +76,7 @@ public partial class MyProfile : System.Web.UI.Page
     }
     protected void btnUpdate_Click(object sender, EventArgs e)
     {
+     
         string id = Session["user_id"].ToString();
         SqlConnection con = new SqlConnection(PAYEClass.connection.ToString());
 
@@ -68,13 +89,43 @@ public partial class MyProfile : System.Web.UI.Page
         }
         try
         {
-            string q1 = "update AdminUser set Password =@Password WHERE A.AdminUserId ='" + id + "'  ";
-            SqlCommand cmd2 = new SqlCommand(q1, con);
-            cmd2.Parameters.AddWithValue("@Password", password);
-            cmd2.ExecuteNonQuery();
-            con.Close();
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "AlertMessage", "<script language=\"javascript\"  type=\"text/javascript\">;alert('User Updated Successfully');</script>", false);
+            string email = "";
+            if (Request.QueryString["emailEMP"] != null && !string.IsNullOrEmpty(Request.QueryString["emailEMP"].ToString()))
+            {
+                email = Request.QueryString["emailEMP"].ToString();
+            }
+            else if (Session["email"] != null)
+            {
+                email = Session["email"].ToString();
+            }
 
+            string username = Session["username"].ToString();
+            DateTime currDate = DateTime.Now;
+            string CurrentDate = currDate.ToString("MM-dd-yyyy");
+            string query = " update AdminUser set Password = @Password, ModifiedBy = '"+ username + "', ModifiedDate = '"+ CurrentDate + "' WHERE Email ='" + email + "'";
+            //SqlCommand cmd2 = new SqlCommand(q1, con);
+            //cmd2.Parameters.AddWithValue("@Password", password);
+            //con.Open();
+            //cmd2.ExecuteNonQuery();
+            //con.Close();
+          
+            using (SqlConnection con1 = new SqlConnection(PAYEClass.connection))
+            {
+                con1.Open();
+
+                System.Data.DataTable dt5;
+
+                if (!string.IsNullOrEmpty(query))
+                {
+                    dt5 = GetqueryDate(query, password);
+                }
+
+                con1.Close();
+                txt_new_password.Text = string.Empty; 
+                txt_con_password.Text= string.Empty;
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "AlertMessage", "<script language=\"javascript\"  type=\"text/javascript\">;alert('User Updated Successfully');</script>", false);
+
+            }
         }
         catch (Exception ex)
         {
@@ -82,6 +133,21 @@ public partial class MyProfile : System.Web.UI.Page
             con.Close();
             ScriptManager.RegisterStartupScript(Page, this.GetType(), "AlertMessage", "<script language=\"javascript\"  type=\"text/javascript\">;alert('Unable To Update user');</script>", false);
             return;
+        }
+    }
+    public static System.Data.DataTable GetqueryDate(string query, string Password)
+    {
+        using (SqlConnection con = new SqlConnection(PAYEClass.connection))
+        {
+            con.Open();
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@Password", Password);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                System.Data.DataTable dt1 = new System.Data.DataTable();
+                adapter.Fill(dt1);
+                return dt1;
+            }
         }
     }
 }

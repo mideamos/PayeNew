@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+
 public partial class UserAdd : System.Web.UI.Page
 {
     SqlConnection con = new SqlConnection(PAYEClass.connection);
@@ -71,7 +72,11 @@ public partial class UserAdd : System.Web.UI.Page
                 ScriptManager.RegisterStartupScript(Page, this.GetType(), "AlertMessage", "<script language=\"javascript\"  type=\"text/javascript\">;alert('User Already Exist.');</script>", false);
                 return;
             }
-            string q1 = "insert into AdminUser ([PayeUserTypeId],[RoleId],[Password],[Email],[FirstName],[LastName],[MiddleName],[Phone],[Designation],Username) Values(1,@RoleId,@Password,@Email,@FirstName,@LastName,@MiddleName,@Phone,@Designation,@Username)";
+
+            DateTime currDate = DateTime.Now;
+            string CurrentDate = currDate.ToString("MM-dd-yyyy");
+
+            string q1 = "insert into AdminUser ([PayeUserTypeId],[RoleId],[Password],[Email],[FirstName],[LastName],[MiddleName],[Phone],[Designation],Username,CreatedBy,CreateddDate, ModifiedBy, ModifiedDate) Values(1,@RoleId,@Password,@Email,@FirstName,@LastName,@MiddleName,@Phone,@Designation,@Username,@CreatedBy,@CreateddDate, @ModifiedBy, @ModifiedDate)";
             SqlCommand cmd2 = new SqlCommand(q1, con);
             cmd2.Parameters.AddWithValue("@RoleId", roleId);
             cmd2.Parameters.AddWithValue("@Email", email);
@@ -82,9 +87,24 @@ public partial class UserAdd : System.Web.UI.Page
             cmd2.Parameters.AddWithValue("@Designation", design);
             cmd2.Parameters.AddWithValue("@Password", password);
             cmd2.Parameters.AddWithValue("@Username", userName);
+            cmd2.Parameters.AddWithValue("@CreatedBy", userName);
+            cmd2.Parameters.AddWithValue("@CreateddDate", CurrentDate);
+            cmd2.Parameters.AddWithValue("@ModifiedBy", "");
+            cmd2.Parameters.AddWithValue("@ModifiedDate", "");
             con.Open();
             cmd2.ExecuteNonQuery();
             con.Close();
+
+            txtemail1.Text = string.Empty;
+            txtfirstname.Text = string.Empty;
+            txtlastname.Text = string.Empty;
+            txtuserName.Text = string.Empty;
+            txtdesign.Text = string.Empty;
+            txtmiddlename.Text = string.Empty;
+            txtphone1.Text = string.Empty;
+            txtpassword.Text = string.Empty;
+            txtpassword2.Text = string.Empty;
+
             ScriptManager.RegisterStartupScript(this, this.GetType(), "AlertMessage", "<script language=\"javascript\"  type=\"text/javascript\">;alert('User Added Successfully');</script>", false);
 
         }

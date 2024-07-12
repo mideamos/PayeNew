@@ -26,43 +26,7 @@ public partial class MasterPage : System.Web.UI.MasterPage
             //    Panel panel = (Panel)Master.FindControl("fitHid");
             //    panel.Visible = false;
             //}
-            if (Session["roleId"] != null)
-            {
-                string roleId = Session["roleId"].ToString();
-               
-                if (roleId == "1")
-                {
-                    UserMgtId.Visible = true; // Show the link
-                
-                }
-                else if (roleId == "2" || roleId == "3")
-                {
-                    UserMgtId.Visible = false; // Hide the link
-
-                }
-
-                if (roleId == "1")
-                {
-                    SysSetId.Visible = true;
-                }
-                else if (roleId == "2" || roleId == "3")
-                {
-
-                    SysSetId.Visible = false; 
-                }
-
-            
-            }
-            else
-            {
-                
-                UserMgtId.Visible = false; 
-            }
-
-            
-
         }
-
     }
     protected void onLastRecord(object sender, EventArgs e)
     {

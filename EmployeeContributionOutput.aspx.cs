@@ -18,6 +18,8 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Web.UI.HtmlControls;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Xml;
 
 public partial class EmployeeContributionOutput : System.Web.UI.Page
 {
@@ -95,134 +97,62 @@ public partial class EmployeeContributionOutput : System.Web.UI.Page
             else
                 div_paging.Style.Add("margin-top", "-60px");
         }
+        //BindGridView();
     }
 
     protected void btnExcel_Click(object sender, EventArgs e)
     {
-        HtmlContainerControl modalinfo = (HtmlContainerControl)this.Master.FindControl("modalinfo");
-        Label lblmodalbody = (Label)this.Master.FindControl("lblmodalbody");
+        //HtmlContainerControl modalinfo = (HtmlContainerControl)this.Master.FindControl("modalinfo");
+        //Label lblmodalbody = (Label)this.Master.FindControl("lblmodalbody");
 
-        if (grd_empoyee_contribution.Rows.Count > 0)
-        {
-            string attachment = "attachment; filename=EmployerContribution.xls";
-            Response.ClearContent();
-            Response.AddHeader("content-disposition", attachment);
-            string tab = "";
-            if (grd_empoyee_contribution.Rows.Count > 0)
-            {
-
-                for (int i = 0; i < grd_empoyee_contribution.Columns.Count; i++)
-                {
-                    Response.Write(tab + grd_empoyee_contribution.Columns[i].HeaderText);
-                    tab = "\t";
-                }
-
-                Response.Write("\n");
-
-                foreach (GridViewRow dr in grd_empoyee_contribution.Rows)
-                {
-                    tab = "";
-                    for (int i = 0; i < grd_empoyee_contribution.Columns.Count; i++)
-                    {
-                        Response.Write(tab + dr.Cells[i].Text);
-                        tab = "\t";
-                    }
-                    Response.Write("\n");
-                }
-                Response.End();
-            }
-        }
-        else
-        {
-
-            if (grd_empoyee_contribution.Rows.Count < 0)
-            {
-                modalinfo.Attributes.Add("class", "modal show");
-                lblmodalbody.Text = "You have Nothing to Download";
-                return;
-            }
-        }
-        //try
+        //if (grd_empoyee_contribution.Rows.Count > 0)
         //{
-        //    ServicePointManager.ServerCertificateValidationCallback = new
-        //    RemoteCertificateValidationCallback
-        //    (
-        //      delegate { return true; }
-        //    );
-
-        //    div_loading.Attributes.Add("display", "block");
-        //    DataTable dt_list = (DataTable)(Session["dt_l"]);
-
-        //    grd_empoyee_contribution.Visible = false;
-        //    grd_empoyee_contribution.AllowPaging = false;
-
-        //    DataTable dt_filtered = new DataTable();
-        //    DataView dt_v = dt_list.DefaultView;
-        //    if (txt_employer_RIN.Text != "")
+        //    string attachment = "attachment; filename=EmployerContribution.xls";
+        //    Response.ClearContent();
+        //    Response.AddHeader("content-disposition", attachment);
+        //    string tab = "";
+        //    if (grd_empoyee_contribution.Rows.Count > 0)
         //    {
-        //        dt_v.RowFilter = "employeeRIN like '%" + txt_employer_RIN.Text + "%' or Employeename like '%" + txt_employer_RIN.Text + "%' or EmployerName like '%" + txt_employer_RIN.Text + "%' or Assessment_year like '%" + txt_employer_RIN.Text + "%' or EmployerRIN like '%" + txt_employer_RIN.Text + "%'";
 
-        //        if (txt_tax_year.SelectedItem.Text != "--Select Year--")
-        //            dt_v.RowFilter = "(employeeRIN like '%" + txt_employer_RIN.Text + "%' or Employeename like '%" + txt_employer_RIN.Text + "%' or EmployerName like '%" + txt_employer_RIN.Text + "%' or Assessment_year like '%" + txt_employer_RIN.Text + "%' or EmployerRIN like '%" + txt_employer_RIN.Text + "%') and (Assessment_year like '%" + txt_tax_year.SelectedItem.Text + "%')";
-
-
-        //    }
-        //    if (txt_tax_year.SelectedItem.Text != "--Select Year--" && txt_employer_RIN.Text == "")
-        //        dt_v.RowFilter = "Assessment_year like '%" + txt_tax_year.SelectedItem.Text + "%'";
-
-        //    grd_empoyee_contribution.DataSource = dt_v;
-
-        //    grd_empoyee_contribution.DataBind();
-
-
-
-        //    DataTable dt = new DataTable();
-        //    for (int i = 0; i < grd_empoyee_contribution.Columns.Count; i++)
-        //    {
-        //        dt.Columns.Add(grd_empoyee_contribution.HeaderRow.Cells[i].Text + "");
-        //    }
-
-        //    foreach (GridViewRow row in grd_empoyee_contribution.Rows)
-        //    {
-        //        DataRow dr = dt.NewRow();
-        //        for (int j = 0; j < grd_empoyee_contribution.Columns.Count; j++)
+        //        for (int i = 0; i < grd_empoyee_contribution.Columns.Count; i++)
         //        {
-        //            if (row.Cells[j].Text == "&nbsp;")
-        //            {
-        //                row.Cells[j].Text = "";
-        //            }
-        //            dr[grd_empoyee_contribution.HeaderRow.Cells[j].Text] = row.Cells[j].Text;
+        //            Response.Write(tab + grd_empoyee_contribution.Columns[i].HeaderText);
+        //            tab = "\t";
         //        }
-        //        dt.Rows.Add(dr);
+
+        //        Response.Write("\n");
+
+        //        foreach (GridViewRow dr in grd_empoyee_contribution.Rows)
+        //        {
+        //            tab = "";
+        //            for (int i = 0; i < grd_empoyee_contribution.Columns.Count; i++)
+        //            {
+        //                Response.Write(tab + dr.Cells[i].Text);
+        //                tab = "\t";
+        //            }
+        //            Response.Write("\n");
+        //        }
+        //        Response.End();
         //    }
-
-        //    MemoryStream memory = PAYEClass.DataTableToExcelXlsx(dt, "EmpoyeeContribution");
-        //    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        //    Response.AddHeader("Content-Disposition", "attachment;filename=EmpoyeeContribution.xlsx");
-        //    memory.WriteTo(Response.OutputStream);
-        //    Response.StatusCode = 200;
-        //    Response.End();
-
-        //    grd_empoyee_contribution.AllowPaging = true;
-        //    grd_empoyee_contribution.DataSource = (DataTable)(Session["dt_l"]);
-
-        //    grd_empoyee_contribution.DataBind();
         //}
-        //catch (Exception exc)
+        //else
         //{
 
+        //    if (grd_empoyee_contribution.Rows.Count < 0)
+        //    {
+        //        modalinfo.Attributes.Add("class", "modal show");
+        //        lblmodalbody.Text = "You have Nothing to Download";
+        //        return;
+        //    }
         //}
-        //div_loading.Attributes.Add("display", "none");
-    }
 
-    protected void btnPDF_Click(object sender, EventArgs e)
-    {
+
         try
         {
             ServicePointManager.ServerCertificateValidationCallback = new
             RemoteCertificateValidationCallback
             (
-                delegate { return true; }
+              delegate { return true; }
             );
 
             div_loading.Attributes.Add("display", "block");
@@ -242,93 +172,178 @@ public partial class EmployeeContributionOutput : System.Web.UI.Page
 
 
             }
-
             if (txt_tax_year.SelectedItem.Text != "--Select Year--" && txt_employer_RIN.Text == "")
                 dt_v.RowFilter = "Assessment_year like '%" + txt_tax_year.SelectedItem.Text + "%'";
 
             grd_empoyee_contribution.DataSource = dt_v;
 
             grd_empoyee_contribution.DataBind();
-            grd_empoyee_contribution.Style.Add("font-weight", "200");
-            Response.ContentType = "application/pdf";
-            Response.AddHeader("content-disposition", "attachment;filename=EmployeeContribution.pdf");
 
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            StringWriter stringWriter = new StringWriter();
-            iTextSharp.text.pdf.PdfPTable table = new iTextSharp.text.pdf.PdfPTable(19);
 
-            iTextSharp.text.Font brown = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.TIMES_ROMAN, 9f, iTextSharp.text.Font.NORMAL);
-            //Set the column widths 
-            int[] widths = { 5, 15, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
-            PdfPCell theCel = new PdfPCell(new Paragraph("S/N", brown));
-            table.AddCell(theCel);
-            for (int x = 0; x < grd_empoyee_contribution.Columns.Count; x++)
+
+            DataTable dt = new DataTable();
+            for (int i = 0; i < grd_empoyee_contribution.Columns.Count; i++)
             {
-                try
-                {
-
-                    string cellText = grd_empoyee_contribution.HeaderRow.Cells[x].Text;
-                    PdfPCell theCell = new PdfPCell(new Paragraph(cellText, brown));
-                    table.AddCell(theCell);
-                }
-                catch (Exception ext)
-                {
-
-                }
-
+                dt.Columns.Add(grd_empoyee_contribution.HeaderRow.Cells[i].Text + "");
             }
 
-            table.CompleteRow();
-            table.SetWidths(widths);
-
-            //Transfer rows from GridView to table
-            for (int i = 0; i < grd_empoyee_contribution.Rows.Count; i++)
+            foreach (GridViewRow row in grd_empoyee_contribution.Rows)
             {
-                string cellText2 = (i + 1) + "";
-
-
-                PdfPCell theCell2 = new PdfPCell(new Paragraph(cellText2, brown));
-                table.AddCell(theCell2);
+                DataRow dr = dt.NewRow();
                 for (int j = 0; j < grd_empoyee_contribution.Columns.Count; j++)
                 {
-
-                    string cellText = grd_empoyee_contribution.Rows[i].Cells[j].Text;
-                    if (cellText == "&nbsp;")
+                    if (row.Cells[j].Text == "&nbsp;")
                     {
-                        cellText = "";
+                        row.Cells[j].Text = "";
                     }
-
-                    PdfPCell theCell = new PdfPCell(new Paragraph(cellText, brown));
-                    table.AddCell(theCell);
+                    dr[grd_empoyee_contribution.HeaderRow.Cells[j].Text] = row.Cells[j].Text;
                 }
-                table.CompleteRow();
-
+                dt.Rows.Add(dr);
             }
 
-            var style = new StyleSheet();
-            style.LoadTagStyle("body", "size", "5px");
-            table.WidthPercentage = 100;
-            Document Doc = new Document(PageSize.A4, 20, 13, 20, 0);
-            Doc.SetPageSize(PageSize.A4.Rotate());
-            //Document Doc = new Document(new Rectangle(1000f, 1000f));
-            PdfWriter.GetInstance(Doc, Response.OutputStream);
-            Doc.Open();
-
-            Doc.Add(table);
-            Doc.Close();
-
-            Response.Write(Doc);
+            MemoryStream memory = PAYEClass.DataTableToExcelXlsx(dt, "EmpoyeeContribution");
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("Content-Disposition", "attachment;filename=EmpoyeeContribution.xlsx");
+            memory.WriteTo(Response.OutputStream);
+            Response.StatusCode = 200;
             Response.End();
+
             grd_empoyee_contribution.AllowPaging = true;
             grd_empoyee_contribution.DataSource = (DataTable)(Session["dt_l"]);
 
             grd_empoyee_contribution.DataBind();
         }
-        catch (Exception e1)
+        catch (Exception exc)
         {
+
         }
         div_loading.Attributes.Add("display", "none");
     }
+
+    protected void btnPDF_Click(object sender, EventArgs e)
+    {
+        //try
+        //{
+        //    ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+
+        //    div_loading.Attributes.Add("display", "block");
+        //    DataTable dt_list = (DataTable)(Session["dt_l"]);
+
+        //    grd_empoyee_contribution.Visible = false;
+        //    grd_empoyee_contribution.AllowPaging = false;
+
+        //    DataTable dt_filtered = new DataTable();
+        //    DataView dt_v = dt_list.DefaultView;
+        //    if (txt_employer_RIN.Text != "")
+        //    {
+        //        dt_v.RowFilter = "employeeRIN like '%" + txt_employer_RIN.Text + "%' or Employeename like '%" + txt_employer_RIN.Text + "%' or EmployerName like '%" + txt_employer_RIN.Text + "%' or Assessment_year like '%" + txt_employer_RIN.Text + "%' or EmployerRIN like '%" + txt_employer_RIN.Text + "%'";
+
+        //        if (txt_tax_year.SelectedItem.Text != "--Select Year--")
+        //            dt_v.RowFilter = "(employeeRIN like '%" + txt_employer_RIN.Text + "%' or Employeename like '%" + txt_employer_RIN.Text + "%' or EmployerName like '%" + txt_employer_RIN.Text + "%' or Assessment_year like '%" + txt_employer_RIN.Text + "%' or EmployerRIN like '%" + txt_employer_RIN.Text + "%') and (Assessment_year like '%" + txt_tax_year.SelectedItem.Text + "%')";
+        //    }
+
+        //    if (txt_tax_year.SelectedItem.Text != "--Select Year--" && txt_employer_RIN.Text == "")
+        //        dt_v.RowFilter = "Assessment_year like '%" + txt_tax_year.SelectedItem.Text + "%'";
+
+        //    grd_empoyee_contribution.DataSource = dt_v;
+        //    grd_empoyee_contribution.DataBind();
+        //    grd_empoyee_contribution.Style.Add("font-weight", "200");
+
+        //    Response.ContentType = "application/pdf";
+        //    Response.AddHeader("content-disposition", "attachment;filename=EmployeeContribution.pdf");
+        //    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+
+        //    using (StringWriter stringWriter = new StringWriter())
+        //    {
+        //        iTextSharp.text.pdf.PdfPTable table = new iTextSharp.text.pdf.PdfPTable(19);
+        //        iTextSharp.text.Font brown = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.TIMES_ROMAN, 9f, iTextSharp.text.Font.NORMAL);
+
+        //        // Set the column widths
+        //        int[] widths = { 5, 15, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
+        //        PdfPCell theCel = new PdfPCell(new Paragraph("S/N", brown));
+        //        table.AddCell(theCel);
+
+        //        for (int x = 0; x < grd_empoyee_contribution.Columns.Count; x++)
+        //        {
+        //            try
+        //            {
+        //                string cellText = grd_empoyee_contribution.HeaderRow.Cells[x].Text;
+        //                PdfPCell theCell = new PdfPCell(new Paragraph(cellText, brown));
+        //                table.AddCell(theCell);
+        //            }
+        //            catch (Exception ext)
+        //            {
+        //                // Handle the exception or log it, if necessary
+        //            }
+        //        }
+
+        //        table.CompleteRow();
+        //        table.SetWidths(widths);
+
+        //        // Transfer rows from GridView to table
+        //        for (int i = 0; i < grd_empoyee_contribution.Rows.Count; i++)
+        //        {
+        //            string cellText2 = (i + 1).ToString();
+        //            PdfPCell theCell2 = new PdfPCell(new Paragraph(cellText2, brown));
+        //            table.AddCell(theCell2);
+
+        //            for (int j = 0; j < grd_empoyee_contribution.Columns.Count; j++)
+        //            {
+        //                string cellText = grd_empoyee_contribution.Rows[i].Cells[j].Text;
+        //                if (cellText == "&nbsp;")
+        //                {
+        //                    cellText = "";
+        //                }
+        //                PdfPCell theCell = new PdfPCell(new Paragraph(cellText, brown));
+        //                table.AddCell(theCell);
+        //            }
+
+        //            table.CompleteRow();
+        //        }
+
+        //        var style = new StyleSheet();
+        //        style.LoadTagStyle("body", "size", "5px");
+        //        table.WidthPercentage = 100;
+
+        //        HtmlTextWriter htmlTextWriter = new HtmlTextWriter(stringWriter);
+
+        //        var style1 = new StyleSheet();
+        //        style1.LoadTagStyle("body", "size", "5px");
+        //        table.WidthPercentage = 100;
+        //        Main.RenderControl(htmlTextWriter);
+        //        StringReader stringReader = new StringReader(stringWriter.ToString());
+        //        Document Doc = new Document(PageSize.A4, 20, 13, 20, 0);
+        //        Doc.SetPageSize(PageSize.A4.Rotate());
+        //        HTMLWorker htmlparser = new HTMLWorker(Doc);
+
+
+        //        using (Document doc = new Document(PageSize.A4, 20, 13, 20, 0))
+        //        {
+        //            doc.SetPageSize(PageSize.A4.Rotate());
+        //            PdfWriter.GetInstance(doc, Response.OutputStream);
+        //            doc.Open();
+        //            htmlparser.SetStyleSheet(style);
+
+        //            htmlparser.Parse(stringReader);
+        //            doc.Add(table);
+        //            doc.Close();
+        //        }
+
+        //        Response.Write(Doc);
+        //        HttpContext.Current.ApplicationInstance.CompleteRequest(); 
+        //    }
+
+        //    grd_empoyee_contribution.AllowPaging = true;
+        //    grd_empoyee_contribution.DataSource = (DataTable)(Session["dt_l"]);
+        //    grd_empoyee_contribution.DataBind();
+        //}
+        //catch (Exception e1)
+        //{
+        //    // Handle the exception or log it, if necessary
+        //}
+        div_loading.Attributes.Add("display", "none");
+    }
+
 
 
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -366,11 +381,21 @@ public partial class EmployeeContributionOutput : System.Web.UI.Page
             if (txt_tax_year.SelectedItem.Text != "--Select Year--")
                 dt_v.RowFilter = "(employeeRIN like '%" + txt_employer_RIN.Text + "%' or Employeename like '%" + txt_employer_RIN.Text + "%' or EmployerName like '%" + txt_employer_RIN.Text + "%' or Assessment_year like '%" + txt_employer_RIN.Text + "%' or EmployerRIN like '%" + txt_employer_RIN.Text + "%') and (Assessment_year like '%" + txt_tax_year.SelectedItem.Text + "%')";
 
-
+            if (dt_v.Count == 0)
+            {
+                string script = "alert('No Record Found');";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "successAlert", script, true);
+                return;
+            }
         }
         if (txt_tax_year.SelectedItem.Text != "--Select Year--" && txt_employer_RIN.Text == "")
             dt_v.RowFilter = "Assessment_year like '%" + txt_tax_year.SelectedItem.Text + "%'";
-
+        if (dt_v.Count == 0)
+        {
+            string script = "alert('No Record Found');";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "successAlert", script, true);
+            return;
+        }
         grd_empoyee_contribution.DataSource = dt_v;
         grd_empoyee_contribution.DataBind();
 
@@ -387,6 +412,24 @@ public partial class EmployeeContributionOutput : System.Web.UI.Page
         else
             div_paging.Style.Add("margin-top", "-60px");
     }
+
+
+    //protected void BindGridView()
+    //{
+     
+    //    foreach (GridViewRow row in grd_empoyee_contribution.Rows)
+    //    {
+    //        if (row.RowType == DataControlRowType.DataRow)
+    //        {
+    //            string pdfUrl = Server.MapPath("~/EmployerContributionOutput.aspx");
+    //            //string pdfUrl = GetPDFUrlForRow(row); // Replace this with your logic to get the PDF URL
+
+    //            Button btnDownload = (Button)row.FindControl("btnDownload");
+    //            btnDownload.Attributes["data-pdfurl"] = pdfUrl;
+    //        }
+    //    }
+    //}
+
 
     public static MonthListValue CalculateTaxMonths(string startMonth, double monthlyTax)
     {

@@ -23,6 +23,7 @@ public partial class UserManagement : System.Web.UI.Page
             }
             getAll();
         }
+
     }
 
     protected void getAll()
@@ -75,8 +76,8 @@ public partial class UserManagement : System.Web.UI.Page
     {
         string id = "";
         GridViewRow clickedRow = ((LinkButton)sender).NamingContainer as GridViewRow;
-        string email = grd_user_management.Rows[clickedRow.RowIndex].Cells[1].Text.ToString();
-        string neid = grd_user_management.Rows[clickedRow.RowIndex].Cells[4].Text.ToString();
+        string email = grd_user_management.Rows[clickedRow.RowIndex].Cells[2].Text.ToString();
+        string neid = grd_user_management.Rows[clickedRow.RowIndex].Cells[5].Text.ToString();
         SqlConnection con = new SqlConnection(PAYEClass.connection.ToString());
         if (neid == "0")
             id = "1";
@@ -88,7 +89,7 @@ public partial class UserManagement : System.Web.UI.Page
             SqlCommand q1 = new SqlCommand("update AdminUser set IsActive = '" + id + "' where Email ='" + email + "'", con);
             con.Open();
             q1.ExecuteNonQuery();
-            con.Close(); 
+            con.Close();
             getAll();
             ScriptManager.RegisterStartupScript(Page, this.GetType(), "AlertMessage", "<script language=\"javascript\"  type=\"text/javascript\">;alert('User Status Changed Successfully');</script>", false);
            

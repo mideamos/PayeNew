@@ -83,7 +83,7 @@
                         Add New <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li>
+                        <li class='<%= Session["roleId"].ToString() != "1" ? "hide" : "show" %>'>
                             <a href="UserAdd.aspx">User</a>
                         </li>
                     </ul>
@@ -107,15 +107,15 @@
                     <asp:TemplateField HeaderText="Actions">
                         <ItemTemplate>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-theme btn-xs md-skip dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button"  class="btn btn-theme btn-xs md-skip dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li>
+                                    <li class='<%= Session["roleId"].ToString() != "1" ? "hide" : "show" %>'>
                                         <asp:LinkButton runat="server" ID="make_user_inactive" OnClick="btn_make_user_inactive_Click" OnClientClick="Confirm_drop_emp()"> Make User InActive/Active </asp:LinkButton>
                                         <%-- <asp:LinkButton PostBackUrl='<%#"~/ShowLegacyDataEmpInput.aspx?compRIN="+Eval("CompanyRIN")+"&year="+Eval("Tax_Year")+"&redirect=I&Employer="+Eval("CompanyName")+"&BusinessRIN="+Eval("BusinessRIN")+"&FiledStatus="+Eval("Status")+""%>' runat="server" ID="lnkDetails"> Manage Employees </asp:LinkButton>--%>
                                     </li>
-                                    <li>
+                                    <li class='<%= Session["roleId"].ToString() != "1" ? "hide" : "show" %>'>
                                         <asp:LinkButton PostBackUrl='<%#"~/MyProfile.aspx?emailEMP="+Eval("Email")+""%>' runat="server" ID="lnkEdit"> Edit User </asp:LinkButton>
                                     </li>
 

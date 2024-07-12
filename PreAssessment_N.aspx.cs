@@ -240,6 +240,7 @@ public partial class PreAssessment_N : System.Web.UI.Page
                    string myParameters = "{ \"TaxPayerTypeID\": " + taxpayerTypeID1 + ", \"TaxPayerID\": " + TaxPayerID1 + ", \"Notes\": \"" + Notes1 + "\", \"AssetTypeID\": " + AssetTypeID1 + ", \"AssetID\": " + AssetID1 + ", \"ProfileID\": " + ProfileId1 + ", \"AssessmentRuleID\": " + AssesmentRuleId1 + ", \"TaxYear\": " + TaxYear1 + ", \"LstAssessmentItem\": [ { \"AssessmentItemID\": " + AssessmentItemId1 + ", \"TaxBaseAmount\": " + taxBaseAmt1 + " } ] }";
                     Session["AssetId"] = "0";
                     string InsCompRes = "";
+                    string tok = Session["token"].ToString();
                     using (WebClient wc = new WebClient())
                     {
                         wc.Headers[HttpRequestHeader.ContentType] = "application/json";

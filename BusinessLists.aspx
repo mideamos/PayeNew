@@ -86,7 +86,7 @@
                 <div class="portlet-title">
                     <div class="caption">Business List</div>
 
-                    <li class='<%= Session["roleId"].ToString() != "1" ? "show" : "hide" %>'>
+                    <li >
                         <div class="actions">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-redtheme dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

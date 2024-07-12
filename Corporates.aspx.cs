@@ -23,7 +23,7 @@ public partial class Corporates : System.Web.UI.Page
 
         //  public string Content-type { get; set; }
     }
-
+      //<%--class='<%= Session["roleId"].ToString() != "1" ? "show" : "hide" %>'--%>
     public class Receiver
     {
         public string Success { get; set; }
@@ -116,7 +116,6 @@ public partial class Corporates : System.Web.UI.Page
             else
                 div_paging.Style.Add("margin-top", "-60px");
         }
-
     }
 
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)

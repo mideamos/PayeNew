@@ -60,7 +60,6 @@
             });
         }
     </script>
-
 </asp:Content>
 <asp:Content ID="content3" runat="server" ContentPlaceHolderID="contentheading">
     Search tax payer - Corporate
@@ -106,23 +105,23 @@
                 <div class="portlet-title">
                     <div class="caption">List of Corporate Tax Payer</div>
                     <div class="actions">
-
-                        <li class='<%= Session["roleId"].ToString() != "1" ? "show" : "hide" %>'>
+                       
+                        <li>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-redtheme dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Add New <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li>
+                                    <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                         <a href="IndividualAdd.aspx">Individual</a>
                                     </li>
-                                    <li>
+                                    <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                         <a href="CorporateAdd.aspx">Corporates</a>
                                     </li>
-                                    <li>
+                                    <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                         <a href="GovernmentAdd.aspx">Government</a>
                                     </li>
-                                    <li>
+                                    <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                         <a href="SpecialAdd.aspx">Special</a>
                                     </li>
                                 </ul>

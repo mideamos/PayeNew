@@ -26,7 +26,19 @@
 
         });
     </script>
+      <script>
+          document.addEventListener('DOMContentLoaded', function () {
+              var btnUpdate = document.getElementById('btnUpdate');
+              var btnsave = document.getElementById('btnUpdateId');
 
+              btnsave.addEventListener('click', function (e) {
+                  if (!btnUpdateId.style.display || btnUpdateId.style.display === 'block') {
+                      e.preventDefault(); // Prevent navigation if visibility is not set to 'none
+                  }
+              });
+
+          });
+      </script>
 
 </asp:Content>
 <asp:Content ID="content3" ContentPlaceHolderID="contentheading" runat="server">
@@ -382,7 +394,7 @@
                     </tr>
 
 
-                    <li class='<%= Session["roleId"].ToString() != "1" ? "show" : "hide" %>'>
+                    <li id="btnUpdateId" runat="server">
                         <tr class="tblrw">
                             <td align="center" colspan="6">
                                 <asp:Button ID="btnsave" runat="server" CssClass="btn btn-redtheme" OnClick="btnsave_Click" Text="Update & Proceed" />

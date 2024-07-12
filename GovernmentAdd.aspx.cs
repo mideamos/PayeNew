@@ -13,30 +13,12 @@ public partial class GovernmentAdd : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         binddropdown();
-
         if (Session["roleId"] != null)
         {
             string roleId = Session["roleId"].ToString();
 
-            if (roleId == "1")
-            {
-                txttype.Enabled = false;
-                txtgovtname.Enabled = false;
-                txtgovttin.Enabled = false;
-                txtgovtphone1.Enabled = false;
-                txtgovtphone2.Enabled = false;
-                txtgovtemail1.Enabled = false;
-                drpgovttaxoffice.Enabled = false;
-                drpgovtprefnotification.Enabled = false;
-                drpgovtprefnotification.Enabled = false;
-                txtaddress.Enabled = false;
-                btngovtsave.Enabled = false;
-                //txt_mobile.Enabled = false;
-                //txt_RIN.Enabled = false;
-
-
-            }
-            else if (roleId == "2" || roleId == "3")
+       
+             if (roleId == "1" || roleId == "2" || roleId == "3")
             {
                 txttype.Enabled = true;
                 txtgovtname.Enabled = true;
@@ -45,14 +27,15 @@ public partial class GovernmentAdd : System.Web.UI.Page
                 txtgovtphone2.Enabled = true;
                 txtgovtemail1.Enabled = true;
                 drpgovttaxoffice.Enabled = true;
+                drpgovtprefnotification.Enabled = true;
                 txtaddress.Enabled = true;
                 btngovtsave.Enabled = true;
-                //txt_mobile.Enabled = true;
-                //txt_RIN.Enabled = true;
-           
 
             }
+
         }
+     
+
     }
 
     public void binddropdown()

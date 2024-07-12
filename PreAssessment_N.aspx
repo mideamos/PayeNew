@@ -141,7 +141,7 @@
             </div>
             <div class="btn-group">
 
-                <li class='<%= Session["roleId"].ToString() != "1" ? "show" : "hide" %>'>
+                <li >
                     <asp:Button runat="server" ID="btnAdd" CssClass="btn btn-redtheme" Text="Send to RDM" OnClick="btnAdd_Click" />
                 </li>
             </div>
@@ -243,7 +243,7 @@
                                         <ItemTemplate>
                                             <%--<asp:CheckBox runat="server" ID="chkrdm" onclick="CheckOne(this)"/>--%>
                                             
-                                            <li class='<%= Session["roleId"].ToString() != "1" ? "show" : "hide" %>'>
+                                            <li >
                                             <asp:CheckBox runat="server" ID="chkrdm" />
                                             <asp:Label ID="lbl_status" runat="server"></asp:Label>
                                                 </li>

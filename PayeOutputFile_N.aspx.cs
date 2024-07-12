@@ -61,7 +61,7 @@ public partial class PayeOutputFile_N : System.Web.UI.Page
     public class MyClass
     {
         public string Tax_Year { get; set; }
-        public long TotalMonthlyTax { get; set; }
+        public decimal TotalMonthlyTax { get; set; }
         public string AssetRin { get; set; }
         public string StatusId { get; set; }
         public string Status { get; set; }
@@ -135,7 +135,7 @@ public partial class PayeOutputFile_N : System.Web.UI.Page
     }
     public class Query2b
     {
-        public long TotalMonthlyTax { get; set; }
+        public Decimal TotalMonthlyTax { get; set; }
     }
     public class Query3
     {
@@ -144,7 +144,6 @@ public partial class PayeOutputFile_N : System.Web.UI.Page
         public string AssessmentItemName { get; set; }
         public string AssessmentRuleName { get; set; }
     }
-
     private DataTable GetEmployeeCompanies(string assetRin,string comRin)
     {
         DataTable responseDt = new DataTable();
@@ -289,7 +288,6 @@ public partial class PayeOutputFile_N : System.Web.UI.Page
         lblpageto.Text = ((e.NewPageIndex + 1) * grd_Company.Rows.Count).ToString();
 
     }
-
     protected void btn_search_Click(object sender, EventArgs e)
     {
         DataTable dt_list_s = new DataTable();
@@ -322,7 +320,6 @@ public partial class PayeOutputFile_N : System.Web.UI.Page
         else
             div_paging.Style.Add("margin-top", "-60px");
     }
-
 
     protected void btn_file_selected_Click(object sender, EventArgs e)
     {
@@ -453,7 +450,7 @@ public partial class PayeOutputFile_N : System.Web.UI.Page
         for (int i = 0; i < responseDt5.Rows.Count; i++)
         {
             Query2b student = new Query2b();
-            student.TotalMonthlyTax = Convert.ToInt64(responseDt5.Rows[i]["TotalMonthlyTax"]);
+            student.TotalMonthlyTax = Convert.ToDecimal(responseDt5.Rows[i]["TotalMonthlyTax"]);
 
             que2b.Add(student);
         }
@@ -527,7 +524,7 @@ public partial class PayeOutputFile_N : System.Web.UI.Page
             var rows = responseDt30.AsEnumerable().Where(r => r.Field<int>("AssessmentItemID") == row.Field<int>("AssessmentItemID"));
             if (rows.Count() > 0)
             {
-                SqlCommand delete = new SqlCommand("Update PreAssessmentRDM set TaxBaseAmount='" + row.Field<long>("TotalMonthlyTax") + "' where AssessmentItemID='" + row.Field<int>("AssessmentItemID") + "' and taxyear='" + year + "'", con2);
+                SqlCommand delete = new SqlCommand("Update PreAssessmentRDM set TaxBaseAmount='" + row.Field<decimal>("TotalMonthlyTax") + "' where AssessmentItemID='" + row.Field<int>("AssessmentItemID") + "' and taxyear='" + year + "'", con2);
                 con2.Open();
                 delete.ExecuteNonQuery();
                 con2.Close();
@@ -543,7 +540,7 @@ public partial class PayeOutputFile_N : System.Web.UI.Page
                  "'" + row.Field<int>("AssessmentRuleID") + "'," +
                  "'" + row.Field<string>("Tax_Year") + "'," +
                  "'" + row.Field<int>("AssessmentItemID") + "'," +
-                 "'" + row.Field<long>("TotalMonthlyTax") + "'," +
+                 "'" + row.Field<Decimal>("TotalMonthlyTax") + "'," +
                  "'" + row.Field<string>("AssessmentRuleName") + "'," +
                  "'" + row.Field<string>("AssessmentItemName") + "'," +
                  "'" + assetRin + "'," +

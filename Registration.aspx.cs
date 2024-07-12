@@ -28,12 +28,20 @@ public partial class Registration : System.Web.UI.Page
             Response.Redirect("Login.aspx");
 
         }
-        if(!IsPostBack)
-        binddropdowns();
+        if (!IsPostBack)
+            binddropdowns();
         ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel();", true);
 
 
-       
+        if (Session["roleId"] != null)
+        {
+            string roleId = Session["roleId"].ToString();
+
+            if (roleId == "1" || roleId == "2" || roleId == "3")
+            {
+                btnUpdateId.Visible = true;
+            }
+        }
 
 
 
@@ -76,7 +84,7 @@ public partial class Registration : System.Web.UI.Page
             DataRow[] filteredRows = dt_list.Select("CompanyRIN LIKE '" + txt_enter_TIN.Text + "'");
             DataTable dt_filtered = new DataTable();
 
-            
+
             /**************************************************************/
 
 
@@ -112,9 +120,9 @@ public partial class Registration : System.Web.UI.Page
 
                 /*********************************************************************************************************/
 
-              //  dpd_asset_type.SelectedValue = dt.Rows[0]["asset_type"].ToString();
-              //  dpd_business_type.SelectedValue = dt.Rows[0]["business_type"].ToString();
-              //  dpd_lga.SelectedValue = dt.Rows[0]["business_lga"].ToString();
+                //  dpd_asset_type.SelectedValue = dt.Rows[0]["asset_type"].ToString();
+                //  dpd_business_type.SelectedValue = dt.Rows[0]["business_type"].ToString();
+                //  dpd_lga.SelectedValue = dt.Rows[0]["business_lga"].ToString();
 
                 dpd_town.SelectedValue = dt.Rows[0]["town"].ToString();
                 txt_contact_person.Text = dt.Rows[0]["contact_person"].ToString();
@@ -250,7 +258,7 @@ public partial class Registration : System.Web.UI.Page
 
     protected void btnsave_Click(object sender, EventArgs e)
     {
-        Session["NewSearched"] = "A"; 
+        Session["NewSearched"] = "A";
         if (txt_company.Text == "" && rd_search.Checked == true)
         {
             showmsg(11, "Please Search Company.");
@@ -329,7 +337,7 @@ public partial class Registration : System.Web.UI.Page
         }
 
         /***************************************************************/
-        string RIN="0";
+        string RIN = "0";
         if (rd_Ind.Checked == true)
         {
             Session["NewSearched"] = "N";
@@ -383,7 +391,7 @@ public partial class Registration : System.Web.UI.Page
 
             showmsg(1, "Company Created Successfully");
             Session["comp_rin"] = "Company Created Successfully," + Session["Rin"] + "";
-           // Response.Redirect("AddEmployee.aspx");
+            // Response.Redirect("AddEmployee.aspx");
             Response.Redirect("AddAsset.aspx");
         }
         else if (result == 11)
@@ -404,7 +412,7 @@ public partial class Registration : System.Web.UI.Page
 
             showmsg(1, "Company Updated Successfully");
             Session["comp_rin"] = "Company Updated Successfully," + Session["Rin"] + "";
-        //    Response.Redirect("AddEmployee.aspx");
+            //    Response.Redirect("AddEmployee.aspx");
             Response.Redirect("AddAsset.aspx");
 
         }
@@ -419,7 +427,7 @@ public partial class Registration : System.Web.UI.Page
 
     public void binddropdowns()
     {
-       
+
 
         /***************************************************************/
         string[] res;
@@ -432,7 +440,7 @@ public partial class Registration : System.Web.UI.Page
         using (WebClient wc = new WebClient())
         {
             wc.Headers[HttpRequestHeader.ContentType] = "application/json";
-           // wc.Headers[HttpRequestHeader.Authorization] = "Bearer " + Session["token"].ToString();
+            // wc.Headers[HttpRequestHeader.Authorization] = "Bearer " + Session["token"].ToString();
 
             InsCompRes = wc.DownloadString(URI);
 
@@ -450,7 +458,7 @@ public partial class Registration : System.Web.UI.Page
 
         string qry = "Select * from Tax_Offices";
         DataTable dt = new DataTable();
-       // dt = PAYEClass.fetchdata(qry);
+        // dt = PAYEClass.fetchdata(qry);
         txt_tax_ofc.DataSource = dt_tax_ofc_list;
         //txt_tax_ofc.DataTextField = "tax_office";
         //txt_tax_ofc.DataValueField = "to_id";
@@ -468,18 +476,18 @@ public partial class Registration : System.Web.UI.Page
         txt_tax_payer_type.DataSource = dt;
         txt_tax_payer_type.DataTextField = "tax_payer_type";
         txt_tax_payer_type.DataValueField = "tptype_id";
-       
+
         txt_tax_payer_type.DataBind();
-       // txt_tax_payer_type.Items.Insert(0, new ListItem("--Select--", "0", true));
-        
+        // txt_tax_payer_type.Items.Insert(0, new ListItem("--Select--", "0", true));
+
 
 
         qry = "Select * from Economic_Activities";
         dt = new DataTable();
         dt = PAYEClass.fetchdata(qry);
         txt_economic_activity.DataSource = dt;
-        txt_economic_activity.DataTextField = "economic_activity";
-        txt_economic_activity.DataValueField = "ea_id";
+        txt_economic_activity.DataTextField = "activity";
+        txt_economic_activity.DataValueField = "Id";
         txt_economic_activity.DataBind();
 
         qry = "Select * from Notification_Types";
@@ -487,7 +495,7 @@ public partial class Registration : System.Web.UI.Page
         dt = PAYEClass.fetchdata(qry);
         txt_preferred_notification.DataSource = dt;
         txt_preferred_notification.DataTextField = "notification_types";
-        txt_preferred_notification.DataValueField = "nott";
+        txt_preferred_notification.DataValueField = "nott_create_by";
         txt_preferred_notification.DataBind();
 
         //qry = "Select * from Tax_Payer_Roles";
@@ -499,16 +507,16 @@ public partial class Registration : System.Web.UI.Page
         //txt_tax_payer_status.DataBind();
 
         qry = "Select * from Asset_type";
-       
+
         dt = new DataTable();
         dt = PAYEClass.fetchdata(qry);
         dpd_asset_type.DataSource = dt;
         dpd_asset_type.DataTextField = "asset_type";
         dpd_asset_type.DataValueField = "asset_id";
         dpd_asset_type.DataBind();
-//        dpd_asset_type.Items.Add(new ListItem("--Select--", "0", true));
-        dpd_asset_type.Items.Insert(0, new ListItem("--Select--", "0",true));
-        
+        //        dpd_asset_type.Items.Add(new ListItem("--Select--", "0", true));
+        dpd_asset_type.Items.Insert(0, new ListItem("--Select--", "0", true));
+
         qry = "Select * from Business_Type";
         dt = new DataTable();
         dt = PAYEClass.fetchdata(qry);
@@ -516,7 +524,7 @@ public partial class Registration : System.Web.UI.Page
         dpd_business_type.DataTextField = "Business_Type";
         dpd_business_type.DataValueField = "Business_Type_id";
         dpd_business_type.DataBind();
-      //  dpd_business_type.Items.Insert(0, new ListItem("--Select--", "0", true));
+        //  dpd_business_type.Items.Insert(0, new ListItem("--Select--", "0", true));
 
         qry = "Select * from Local_Government_Areas";
         dt = new DataTable();
@@ -565,8 +573,8 @@ public partial class Registration : System.Web.UI.Page
             acctbal = float.Parse(txt_Acct_Bal.Text.Trim());
 
         Session["Rin"] = rin;
-       if(txt_Company_TIN.Text=="Autogenerated")
-        txt_Company_TIN.Text = rin;
+        if (txt_Company_TIN.Text == "Autogenerated")
+            txt_Company_TIN.Text = rin;
         SqlParameter[] pram = new SqlParameter[31];
         pram[0] = new SqlParameter("@company_create_by", 1);
         pram[1] = new SqlParameter("@company_name", txt_company.Text.ToString().Trim());
@@ -581,10 +589,10 @@ public partial class Registration : System.Web.UI.Page
         pram[10] = new SqlParameter("@preffered_notification_method", txt_preferred_notification.SelectedValue.Trim());
         pram[11] = new SqlParameter("@tax_payer_status", txt_tax_payer_status.SelectedValue.Trim());
         pram[12] = new SqlParameter("@acct_bal", acctbal);
-      //  pram[13] = new SqlParameter("@company_rin", txt_RIN.Text.Trim());
+        //  pram[13] = new SqlParameter("@company_rin", txt_RIN.Text.Trim());
         pram[13] = new SqlParameter("@company_rin", rin);
         /***************************************************************************/
-        
+
         pram[14] = new SqlParameter("@Asset_Type", dpd_asset_type.SelectedValue.Trim());
         pram[15] = new SqlParameter("@Profile", dpd_profile.SelectedValue.Trim());
         pram[16] = new SqlParameter("@Business_Type", dpd_business_type.SelectedValue.Trim());
@@ -695,7 +703,7 @@ public partial class Registration : System.Web.UI.Page
         dpd_business_sector.DataValueField = "bs_sc_id";
         dpd_business_sector.DataBind();
 
-       
+
         qry = "Select * from Business_Sub_Sectors where  business_sector=" + dpd_business_sector.SelectedValue;
 
         if (dpd_business_sector.SelectedValue == "")
@@ -724,12 +732,12 @@ public partial class Registration : System.Web.UI.Page
     protected void rd_Ind_CheckedChanged(object sender, EventArgs e)
     {
         tr_enter_TIN.Style.Add("display", "none");
-        
+
         txt_company.Enabled = true;
         txt_Company_TIN.Text = "Autogenerated";
 
         txt_company.Text = "";
-       
+
         txt_mob1.Text = "";
         txt_mob2.Text = "";
         txt_Email1.Text = "";

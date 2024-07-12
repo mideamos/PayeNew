@@ -104,16 +104,16 @@ z-index: 10000;
                                         Add New <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
+                                         <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                             <a href="IndividualAdd.aspx">Individual</a>
                                         </li>
-                                        <li>
+                                         <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                             <a href="CorporateAdd.aspx">Corporates</a>
                                         </li>
-                                        <li>
+                                          <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                             <a href="GovernmentAdd.aspx">Government</a>
                                         </li>
-                                        <li>
+                                          <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                             <a href="SpecialAdd.aspx">Special</a>
                                         </li>
                                     </ul>

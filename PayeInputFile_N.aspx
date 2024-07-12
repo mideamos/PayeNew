@@ -17,7 +17,7 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    
+
 
     <script type="text/javascript">
         function showImage() {
@@ -28,7 +28,7 @@
             document.getElementById('<%=div_loading.ClientID%>').style.display = "none";
 
         }
-      
+
         function Confirm() {
             var confirm_value = document.createElement("INPUT");
             confirm_value.type = "hidden";
@@ -98,31 +98,31 @@
             <div class="portlet light">
                 <div class="portlet-title">
                     <div class="caption">Paye Input File (Corporate List)</div>
-                    <div align="right">
+                    <div align="right" class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                         <asp:Button ID="btn_file_selected" Text="File Selected" runat="server" CssClass="btn btn-theme" OnClick="btn_file_selected_Click" OnClientClick="Confirm()" />
-                    
+
                     </div>
                 </div>
                 <div>
                     <table class="table borderless" style="width: 100% !important; border: none !important;">
                         <tr>
                             <td>Tax Year:</td>
-                           
+
                             <td>
                                 <asp:DropDownList ID="txt_tax_year" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="btn_search_Click"></asp:DropDownList></td>
                             <td>Company RIN:</td>
-                            
+
                             <td>
                                 <asp:TextBox ID="txt_cmp_RIN" runat="server" CssClass="form-control" placeholder="Company RIN"></asp:TextBox>
 
                             </td>
                             <td>Business RIN:</td>
-                           
+
                             <td>
                                 <asp:TextBox ID="txt_employer_RIN" runat="server" CssClass="form-control" placeholder="Business RIN"></asp:TextBox>
 
                             </td>
-                           
+
                             <td colspan="3" style="text-align: right;">
                                 <asp:Button ID="btn_search" Text="Search" runat="server" CssClass="btn btn-theme" OnClick="btn_search_Click" Visible="true" />
 
@@ -169,9 +169,9 @@
 
                             <asp:BoundField DataField="EmployeeCount" HeaderText="Employee Count" />
 
-                            <asp:BoundField DataField="Status"  HeaderText="Status (Filed/UnFiled)" />
+                            <asp:BoundField DataField="Status" HeaderText="Status (Filed/UnFiled)" />
 
-                            
+
                             <asp:TemplateField HeaderText="CheckBox">
                                 <ItemTemplate>
                                     <asp:CheckBox runat="server" ID="chkchkbox" />
@@ -184,17 +184,17 @@
                                             Action <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            
-                                            <li class='<%= Session["roleId"].ToString() != "1" ? "show" : "hide" %>'>
+
+                                            <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                                 <asp:LinkButton PostBackUrl='<%#"~/ShowLegacyDataEmpInput.aspx?compRIN="+Eval("CompanyRIN")+"&year="+Eval("Tax_Year")+"&redirect=I&Employer="+Eval("CompanyName")+"&BusinessRIN="+Eval("BusinessRIN")+"&FiledStatus="+Eval("Status")+""%>' runat="server" ID="lnkDetails"> Manage Employees </asp:LinkButton>
                                             </li>
-                                            
-                                            <li class='<%= Session["roleId"].ToString() != "1" ? "show" : "hide" %>'>
+
+                                            <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                                 <asp:LinkButton runat="server" ID="lnksendtoinputfile" OnClick="btn_file_selected_Click" OnClientClick="Confirm()"> Submit Filing </asp:LinkButton>
                                             </li>
 
-                                           
-                                            <li class='<%= Session["roleId"].ToString() != "1" ? "show" : "hide" %>'>
+
+                                            <li class='<%= Session["roleId"].ToString() == "3" ? "hide" : "show" %>'>
                                                 <asp:LinkButton runat="server" ID="lnk_drop_employees" OnClick="btn_drop_employees_Click" OnClientClick="Confirm_drop_emps()"> Drop Employees </asp:LinkButton>
                                             </li>
                                         </ul>
