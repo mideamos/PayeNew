@@ -91,40 +91,6 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
             // showmsg(2, "1");
         }
     }
-    protected void btnupload_Click(object sender, EventArgs e)
-    {
-        /* try
-         {*/
-        showmsg(3, "");
-        if (fpemp.HasFile)
-        {
-            if (fpemp.PostedFile.FileName.Contains(".xlsx"))
-            {
-                string uploadUrl = PAYEClass.uploadurl;
-                string filePath = uploadUrl + "/docs/" + drpfupcomapny.SelectedValue.Trim() + "_1.xlsx";
-                HttpPostedFile fileToUpload = fpemp.PostedFile;
-
-                if (File.Exists("filePath"))
-                {
-                    File.Delete("filePath");
-                }
-
-                fileToUpload.SaveAs(filePath);
-                uploademployee();
-
-            }
-            else
-            {
-                showmsg(2, "Please upload .xlsx file");
-            }
-        }
-        else
-        {
-            showmsg(2, "Please upload a file");
-        }
-
-    }
-
     //protected void btnupload_Click(object sender, EventArgs e)
     //{
     //    /* try
@@ -132,31 +98,18 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
     //    showmsg(3, "");
     //    if (fpemp.HasFile)
     //    {
-
     //        if (fpemp.PostedFile.FileName.Contains(".xlsx"))
-    //        { //for stage since it RDC
+    //        {
     //            string uploadUrl = PAYEClass.uploadurl;
-    //            string ftpUsername = PAYEClass.ftpusername;
-    //            string ftpPassword = PAYEClass.ftppassword;
-    //            string filePath = drpfupcomapny.SelectedValue.Trim() + "_1.xlsx";
+    //            string filePath = uploadUrl + "/docs/" + drpfupcomapny.SelectedValue.Trim() + "_1.xlsx";
     //            HttpPostedFile fileToUpload = fpemp.PostedFile;
 
-    //            if (File.Exists("filePath"))
+    //            if (File.Exists(filePath))
     //            {
-    //                File.Delete("filePath");
+    //                File.Delete(filePath);
     //            }
 
     //            fileToUpload.SaveAs(filePath);
-
-
-
-    //            //for live since it FTP
-
-    //            //using (var client = new WebClient())
-    //            //{
-    //            //    client.Credentials = new NetworkCredential(ftpUsername, ftpPassword);
-    //            //    client.UploadFile(uploadUrl, WebRequestMethods.Ftp.UploadFile, filePath);
-    //            //}
     //            uploademployee();
 
     //        }
@@ -172,17 +125,69 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
 
     //}
 
+    protected void btnupload_Click(object sender, EventArgs e)
+    {
+        /* try
+         {*/
+        showmsg(3, "");
+        if (fpemp.HasFile)
+        {
+
+            if (fpemp.PostedFile.FileName.Contains(".xlsx"))
+            { //for stage since it RDC
+                string uploadUrl = PAYEClass.uploadurl;
+                string ftpUsername = PAYEClass.ftpusername;
+                string ftpPassword = PAYEClass.ftppassword;
+                //string filePath = drpfupcomapny.SelectedValue.Trim() + "_1.xlsx";
+                string fileName = drpfupcomapny.SelectedValue.Trim() + "_1.xlsx";
+                string filePath = Path.Combine(uploadUrl,  fileName);
+
+                HttpPostedFile fileToUpload = fpemp.PostedFile;
+
+                string directoryPath = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                fileToUpload.SaveAs(filePath);
+
+
+
+                //for live since it FTP
+
+                //using (var client = new WebClient())
+                //{
+                //    client.Credentials = new NetworkCredential(ftpUsername, ftpPassword);
+                //    client.UploadFile(uploadUrl, WebRequestMethods.Ftp.UploadFile, filePath);
+                //}
+                uploademployee();
+
+            }
+            else
+            {
+                showmsg(2, "Please upload .xlsx file");
+            }
+        }
+        else
+        {
+            showmsg(2, "Please upload a file");
+        }
+
+    }
+
     public void uploademployee()
     {
         string token = "";
         token = PAYEClass.getToken();
 
         string uploadUrl = PAYEClass.uploadurl;
-        string filepath = uploadUrl + "/docs/" + drpfupcomapny.SelectedValue.Trim() + "_1.xlsx";
-
+        //string filepath = uploadUrl + drpfupcomapny.SelectedValue.Trim() + "_1.xlsx";
+        string fileName = drpfupcomapny.SelectedValue.Trim() + "_1.xlsx";
+        string filePath = Path.Combine(uploadUrl, fileName);
 
         DataTable dt = new DataTable();
-        dt = getdatatable(filepath);
+        dt = test22(filePath);
         int st = 0;
 
         int status = 0;
@@ -195,11 +200,11 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
 
             if (row1["employer_rin"].ToString() == "")
                 goto blankrepeat;
-            if (row1["employee_rin"].ToString() == "" && row1["employee_tin"].ToString() == "" && row1["employee_phone"].ToString() == "")
+            if (row1["employee_rin"].ToString().Trim() == "" && row1["employee_tin"].ToString().Trim() == "" && row1["employee_phone"].ToString().Trim() == "")
 
                 ScriptManager.RegisterStartupScript(Page, this.GetType(), "AlertMessage", "<script language=\"javascript\"  type=\"text/javascript\">;alert('Something Went Wrong.');</script>", false);
 
-            URI1 = PAYEClass.URL_API + "TaxPayer/SearchTaxPayerByRIN?TaxPayerRIN=" + row1["employee_rin"].ToString();
+            URI1 = PAYEClass.URL_API + "TaxPayer/SearchTaxPayerByRIN?TaxPayerRIN=" + row1["employee_rin"].ToString().Trim();
 
             string InsCompRes = "";
             string headers = "";
@@ -219,9 +224,9 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
 
                 /******************** Check With Mobile No. Start*****************************/
 
-                if (row1["employee_rin"].ToString() != "")
+                if (row1["employee_rin"].ToString().Trim() != "")
                 {
-                    URI1 = PAYEClass.URL_API + "TaxPayer/SearchTaxPayerByRIN?TaxPayerRIN=" + row1["employee_rin"].ToString();
+                    URI1 = PAYEClass.URL_API + "TaxPayer/SearchTaxPayerByRIN?TaxPayerRIN=" + row1["employee_rin"].ToString().Trim();
                     using (var wc_mobile = new WebClient())
                     {
                         wc_mobile.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
@@ -230,9 +235,9 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
                         des = (Receiver)JsonConvert.DeserializeObject(InsCompRes, typeof(Receiver));
                     }
                 }
-                else if (row1["employee_phone"].ToString() != "")
+                else if (row1["employee_phone"].ToString().Trim() != "")
                 {
-                    URI1 = PAYEClass.URL_API + "TaxPayer/SearchTaxPayerByMobileNumber?MobileNumber=" + row1["employee_phone"].ToString();
+                    URI1 = PAYEClass.URL_API + "TaxPayer/SearchTaxPayerByMobileNumber?MobileNumber=" + row1["employee_phone"].ToString().Trim();
                     using (var wc_mobile = new WebClient())
                     {
                         wc_mobile.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
@@ -245,9 +250,9 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
                     }
 
                 }
-                else if (row1["employee_tin"].ToString() != "")
+                else if (row1["employee_tin"].ToString().Trim() != "")
                 {
-                    URI1 = PAYEClass.URL_API + "TaxPayer/SearchTaxPayerByTIN?TaxPayerTIN=" + row1["employee_tin"].ToString();
+                    URI1 = PAYEClass.URL_API + "TaxPayer/SearchTaxPayerByTIN?TaxPayerTIN=" + row1["employee_tin"].ToString().Trim();
                     using (var wc_mobile = new WebClient())
                     {
                         wc_mobile.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
@@ -269,7 +274,7 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
                 {
                     jObject = JObject.Parse(InsCompRes);
                     // token = PAYEClass.getToken();
-                    if (InsCompRes != "" && InsCompRes.Split('[')[1].ToString() != "]}" && (jObject["Result"][0]["TaxPayerTypeID"]).ToString() =="1")
+                    if (InsCompRes != "" && InsCompRes.Split('[')[1].ToString() != "]}" && (jObject["Result"][0]["TaxPayerTypeID"]).ToString().Trim() == "1")
                     {
                         taxPayerId = (jObject["Result"][0]["TaxPayerID"]).ToString();
                         taxPayerName = (jObject["Result"][0]["TaxPayerName"]).ToString();
@@ -278,7 +283,7 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
 
 
                         //string myParameters_AddInd_Business_API = "{\"TaxPayerID\": " + dt_list_api.Rows[0]["TaxPayerID"].ToString() + ", \"AssetID\": " + Session["BusinessID"].ToString() + ", \"TaxPayerRoleID\": " + dt_list_api.Rows[0]["TaxPayerTypeID"].ToString() + "}";
-                        string myParameters_AddInd_Business_API = "{\"TaxPayerID\": " + taxPayerId + ", \"AssetID\": " + Session["BusinessID"].ToString() + ", \"TaxPayerRoleID\": " + 7 + "}";
+                        string myParameters_AddInd_Business_API = "{\"TaxPayerID\": " + taxPayerId + ", \"AssetID\": " + Session["BusinessID"].ToString().Trim() + ", \"TaxPayerRoleID\": " + 7 + "}";
                         string InsCompRes_AddIndBusinessAPI = "";
                         try
                         {
@@ -338,7 +343,7 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
                             res_AddInd_API = InsCompRes_AddIndAPI.Split('"');
                             if (res_AddInd_API[2].ToString() == ":false,")
                             {
-                                showmsg(2, "Something Wrong in Sheet:" + res_AddInd_API[5].ToString());
+                                showmsg(2, "Something Wrong in Sheet:" + res_AddInd_API[5].ToString().Trim());
                                 return;
                             }
                         }
@@ -521,6 +526,42 @@ public partial class UploadNewInputFile_N : System.Web.UI.Page
         {
             divmsg.Style.Add("display", "none");
         }
+    }
+
+    public DataTable test22(string filename)
+    {
+        // Load the Excel package from the file path
+        using (var package = new OfficeOpenXml.ExcelPackage(new FileInfo(filename)))
+        {
+            // Assuming there is only one worksheet in the Excel file
+            var worksheet = package.Workbook.Worksheets[0];
+
+            // Read the Excel data into a DataTable
+            DataTable dt = new DataTable();
+
+            // Loop through the rows of the worksheet and add them to the DataTable
+            foreach (var firstRowCell in worksheet.Cells[1, 1, 1, worksheet.Dimension.End.Column])
+            {
+                dt.Columns.Add(firstRowCell.Text);
+            }
+
+            for (var rowNumber = 2; rowNumber <= worksheet.Dimension.End.Row; rowNumber++)
+            {
+                var row = worksheet.Cells[rowNumber, 1, rowNumber, worksheet.Dimension.End.Column];
+                var newRow = dt.NewRow();
+
+                foreach (var cell in row)
+                {
+                    newRow[cell.Start.Column - 1] = cell.Text;
+                }
+
+                dt.Rows.Add(newRow);
+            }
+
+            // Now 'dt' DataTable contains the Excel data
+            return dt;
+        }
+
     }
 
 }
